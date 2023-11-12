@@ -1,16 +1,20 @@
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
+require('dotenv').config();
+
+const viewEngine = require('./config/viewEngine');
+const route = require('./routes');
 
 const app = express();
+const port = process.env.PORT || 6969;
 
-const port = 3000;
+// config app
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-    res.send('Home page');
-});
+viewEngine(app);
+route(app);
 
 app.listen(port, () => {
-    console.log(`Backend NodeJS is running on port : http://localhost:${port}`);
+    console.log(`App is running on port : http://localhost:${port}`);
 });
