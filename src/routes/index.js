@@ -6,10 +6,9 @@ const router = express.Router();
 
 function route(app) {
     router.get('/', homeController.getHomePage);
+    router.get('/courses', homeController.getCourse);
+    router.post('/courses', homeController.postAccount);
 
-    router.get('/asds', (req, res) => {
-        return res.send('hello');
-    });
     return app.use('/', router);
 }
 
