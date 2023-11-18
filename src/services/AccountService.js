@@ -31,4 +31,31 @@ const hasAccountPassword = (password) => {
     });
 };
 
-module.exports = createNewAccount;
+const updateAccount = async (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const account = await db.Account.findOne({ where: { id: data.id } });
+            account.phoneNumber = data.phoneNumber;
+            account.email = data.email;
+            await account.save();
+
+            resolve(account);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+const deleteAccountById = async (accountId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const account = await db.Account.findOne({ where: { id: accountId } });
+
+            await account.destroy();
+            resolve('Xoa thanh cong');
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+module.exports = { createNewAccount, updateAccount, deleteAccountById };

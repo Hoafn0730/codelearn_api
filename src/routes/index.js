@@ -6,8 +6,10 @@ const router = express.Router();
 
 function route(app) {
     router.get('/', homeController.getHomePage);
-    router.get('/courses', homeController.getCourse);
-    router.post('/courses', homeController.postAccount);
+    router.get('/accounts', homeController.getAccount);
+    router.post('/post-accounts', homeController.postAccount);
+    router.post('/put-accounts', homeController.putAccount);
+    router.post('/delete-accounts', homeController.deleteAccount);
 
     return app.use('/', router);
 }

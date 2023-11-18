@@ -1,5 +1,5 @@
 const db = require('../models');
-const createNewAccount = require('../services/AccountService');
+const AccountService = require('../services/AccountService');
 
 const getHomePage = async (req, res) => {
     try {
@@ -11,18 +11,31 @@ const getHomePage = async (req, res) => {
     }
 };
 
-const getCourse = async (req, res) => {
-    const data = await db.User.findAll({ raw: true });
+const getAccount = async (req, res) => {
+    const data = await db.Account.findAll({ raw: true });
     return res.json({ status: 200, data });
 };
 
 const postAccount = async (req, res) => {
-    const message = await createNewAccount(req.body);
+    const message = await AccountService.createNewAccount(req.body);
     return res.json({ status: 200, message, data: req.body });
+};
+
+const putAccount = async (req, res) => {
+    const account = await AccountService.updateAccount(req.body);
+
+    return res.json({ status: 200, data: account });
+};
+
+const deleteAccount = async (req, res) => {
+    const message = await AccountService.deleteAccountById(req.query.id);
+    return res.json({ status: 200, message });
 };
 
 module.exports = {
     getHomePage,
-    getCourse,
+    getAccount,
     postAccount,
+    putAccount,
+    deleteAccount,
 };
