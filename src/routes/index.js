@@ -1,17 +1,8 @@
-const express = require('express');
-
-import homeController from '../controllers/homeController';
-
-const router = express.Router();
+import accountRouter from './account';
 
 function route(app) {
-    router.get('/', homeController.getHomePage);
-    router.get('/accounts', homeController.getAccount);
-    router.post('/post-accounts', homeController.postAccount);
-    router.post('/put-accounts', homeController.putAccount);
-    router.post('/delete-accounts', homeController.deleteAccount);
-
-    return app.use('/', router);
+    // app.use('/', siteRouter);
+    app.use('/', accountRouter);
 }
 
 module.exports = route;

@@ -45,6 +45,7 @@ const updateAccount = async (data) => {
         }
     });
 };
+
 const deleteAccountById = async (accountId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -58,4 +59,65 @@ const deleteAccountById = async (accountId) => {
     });
 };
 
-module.exports = { createNewAccount, updateAccount, deleteAccountById };
+const login = (userName, password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let userData = {};
+            const isExist = await checkUserName(userName);
+
+            if (isExist) {
+                const user = await db.Account.findOne({
+                    where: {
+                        userName,
+                    },
+                    raw: true,
+                    attributes: ['userName', 'password', 'roleId'],
+                });
+                if (user) {
+                    const check = await bcrypt.compareSync(password, user.password);
+
+                    if (check) {
+                        userData.errCode = 0;
+                        userData.message = 'OK';
+                        delete user.password;
+                        userData.user = user;
+                    } else {
+                        userData.errCode = 3;
+                        userData.message = 'Wrong password';
+                    }
+                } else {
+                    userData.errCode = 2;
+                    userData.message = `User's not found`;
+                }
+            } else {
+                userData.errCode = 1;
+                userData.message = `Your's username isn't exist in your system. Plz try other username!`;
+            }
+
+            resolve(userData);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+const checkUserName = (userName) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await db.Account.findOne({
+                where: {
+                    userName,
+                },
+            });
+            if (user) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+module.exports = { createNewAccount, updateAccount, deleteAccountById, login };
